@@ -41,40 +41,16 @@
             background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 50%, #000000 100%);
             min-height: 100vh;
             overflow-x: hidden;
+            padding-top: 80px; /* Espacio para que la barra de arriba no tape el primer panel */
         }
         
-        /* Ocultar barra de scroll para que se vea más limpio */
         ::-webkit-scrollbar { display: none; }
-        html { scrollbar-width: none; }
+        html { scrollbar-width: none; scroll-behavior: smooth; }
         
-        /* Pantalla de carga */
-        .loading-screen {
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 9999;
-            background: #000;
-            transition: opacity 0.5s ease;
-        }
-        
-        .loading-content { text-align: center; }
-        .loading-content span { font-size: 4rem; animation: wave 2s ease-in-out infinite; }
-        
-        @keyframes wave {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(20deg); }
-            75% { transform: rotate(-20deg); }
-        }
-        
-        /* Botones de navegación inferiores */
-        .nav-buttons {
+        /* BARRA DE NAVEGACIÓN SUPERIOR (ESTILO APPLE) */
+        .nav-container {
             position: fixed;
-            bottom: 24px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
@@ -83,18 +59,34 @@
             align-items: center;
             flex-wrap: wrap;
             justify-content: center;
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            width: max-content;
+            max-width: 95%;
         }
         
-        .glass-button {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            cursor: pointer !important;
-            position: relative;
-            overflow: hidden;
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: 'SF Pro Display', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
         
-        .glass-button:hover {
-            transform: scale(1.05) !important;
-            filter: brightness(1.2) !important;
+        .nav-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
         }
         
         .hero-actions {
@@ -149,7 +141,6 @@
             transform: translateY(-2px) scale(1.05);
         }
         
-        /* Contenedor Principal */
         .main-content {
             display: flex;
             min-height: 100vh;
@@ -163,23 +154,23 @@
             display: flex;
             flex-direction: column;
             gap: 32px;
-            margin-top: 50px;
-            margin-bottom: 80px; /* Espacio para que los botones no tapen el pie de página */
+            margin-bottom: 60px;
         }
         
         .glass-panel {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
             border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 32px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
+            scroll-margin-top: 100px; /* Para que al dar clic en el menú, no quede tapado por la barra */
         }
         
         .glass-panel:hover {
-            transform: translateY(-8px) scale(1.02);
-            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.08);
         }
         
         h1 {
@@ -258,23 +249,25 @@
         .project-card .project-tech { margin-bottom: 16px; color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; }
         
         @media (max-width: 768px) {
-            .content-panels { padding: 16px; margin-top: 20px; }
+            body { padding-top: 120px; }
+            .content-panels { padding: 16px; }
             .glass-panel { padding: 24px; }
             .hero-actions { flex-direction: column; align-items: flex-start; }
-            .nav-buttons { bottom: 10px; }
+            .nav-container { top: 10px; padding: 8px 12px; gap: 4px; border-radius: 20px; }
+            .nav-btn { font-size: 12px; padding: 6px 10px; }
         }
     </style>
 </head>
 <body>
-    <!-- Pantalla de carga -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-content">
-            <span>👋</span>
-        </div>
-    </div>
     
-    <!-- Botones flotantes inferiores -->
-    <div class="nav-buttons" id="navButtons"></div>
+    <!-- BARRA DE NAVEGACIÓN SUPERIOR -->
+    <nav class="nav-container">
+        <button class="nav-btn" onclick="scrollToSection('home')">Inicio</button>
+        <button class="nav-btn" onclick="scrollToSection('about')">Sobre mí</button>
+        <button class="nav-btn" onclick="scrollToSection('skills')">Habilidades</button>
+        <button class="nav-btn" onclick="scrollToSection('projects')">Proyectos</button>
+        <button class="nav-btn" onclick="scrollToSection('contact')">Contacto</button>
+    </nav>
     
     <div class="main-content">
         <div class="content-panels">
@@ -290,14 +283,12 @@
                     </p>
                     
                     <div class="hero-actions">
-                        <!-- CAMBIA EL # POR EL ENLACE DE TU CV -->
                         <a href="#" target="_blank" class="resume-button">
                             <span>Ver Currículum</span>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
                         </a>
                         
                         <div class="social-links">
-                            <!-- CAMBIA EL # POR TUS REDES -->
                             <a href="#" target="_blank" class="social-link" aria-label="LinkedIn">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                             </a>
@@ -403,7 +394,7 @@
     </div>
     
     <!-- PIE DE PÁGINA -->
-    <footer class="footer" style="padding: 40px 20px; margin-top: 60px; border-top: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.2);">
+    <footer class="footer" style="padding: 40px 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.2);">
         <div style="max-width: 800px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; gap: 15px;">
             
             <div>
@@ -428,64 +419,14 @@
         </div>
     </footer>
     
-    <!-- SCRIPT PARA EL SCROLL Y BOTONES (CORREGIDO SIN BLOQUEOS) -->
+    <!-- SCRIPT PARA SCROLL SUAVE -->
     <script>
-        // Ocultar la pantalla de carga después de 2 segundos
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const loader = document.getElementById('loadingScreen');
-                if(loader) {
-                    loader.style.opacity = '0';
-                    setTimeout(() => loader.style.display = 'none', 500);
-                }
-            }, 1500);
-        });
-
-        // Crear los botones de navegación flotantes
-        document.addEventListener('DOMContentLoaded', () => {
-            const navContainer = document.getElementById('navButtons');
-            const navItems = [
-                { text: 'Inicio', target: 'home' },
-                { text: 'Sobre mí', target: 'about' },
-                { text: 'Habilidades', target: 'skills' },
-                { text: 'Proyectos', target: 'projects' },
-                { text: 'Contacto', target: 'contact' }
-            ];
-
-            navItems.forEach(item => {
-                const btn = document.createElement('button');
-                btn.textContent = item.text;
-                
-                // Estilos para simular el "vidrio" de Apple sin depender de librerías externas
-                btn.style.cssText = `
-                    background: rgba(255, 255, 255, 0.1);
-                    backdrop-filter: blur(15px);
-                    -webkit-backdrop-filter: blur(15px);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    color: white;
-                    padding: 10px 18px;
-                    border-radius: 20px;
-                    font-family: 'SF Pro Display', sans-serif;
-                    font-weight: 600;
-                    font-size: 14px;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-                `;
-                
-                btn.onmouseover = () => { btn.style.transform = 'scale(1.1)'; btn.style.background = 'rgba(255, 255, 255, 0.2)'; };
-                btn.onmouseout = () => { btn.style.transform = 'scale(1)'; btn.style.background = 'rgba(255, 255, 255, 0.1)'; };
-                
-                btn.onclick = () => {
-                    const section = document.getElementById(item.target);
-                    if(section) {
-                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                };
-                
-                navContainer.appendChild(btn);
-            });
-        });
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
     </script>
 </body>
 </html>
